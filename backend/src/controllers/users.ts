@@ -46,6 +46,8 @@ export const Register: RequestHandler<
 			followers: [],
 		});
 
+		req.session.userId = newUser._id;
+
 		res.status(201).json(newUser);
 	} catch (error) {
 		next(error);
