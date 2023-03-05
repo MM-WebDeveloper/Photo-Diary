@@ -4,8 +4,7 @@ import UserModel from '../models/user';
 import bcrypt from 'bcrypt';
 
 interface LoginBody {
-	username?: string;
-	email?: string;
+	usernameOrEmail: string;
 	password: string;
 }
 
@@ -15,14 +14,16 @@ export const Login: RequestHandler<
 	LoginBody,
 	unknown
 > = async (req, res, next) => {
-	const { username, email, password } = req.body;
+	const { usernameOrEmail, password } = req.body;
 
 	try {
-		if ((!username && !email) || !password) {
+		if (!usernameOrEmail || !password) {
 			throw createHttpError(400, 'Enter your credentials');
 		}
 
-		const user = await UserModel.findOne({ $or: [{ username }, { email }] })
+		const user = await UserModel.findOne({
+			$or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+		})
 			.select('+password')
 			.exec();
 
