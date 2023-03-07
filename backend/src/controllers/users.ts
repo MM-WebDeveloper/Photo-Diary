@@ -37,8 +37,16 @@ export const Login: RequestHandler<
 			throw createHttpError(401, 'Invalid credentials');
 		}
 
+		const userOmittedPwd = {
+			username: user.username,
+			email: user.email,
+			fullName: user.fullName,
+			following: user.following,
+			follwers: user.followers,
+		};
+
 		req.session.userId = user._id;
-		res.json(user);
+		res.json(userOmittedPwd);
 	} catch (error) {
 		next(error);
 	}
