@@ -3,6 +3,15 @@ import createHttpError from 'http-errors';
 import UserModel from '../models/user';
 import bcrypt from 'bcrypt';
 
+export const AuthenticateUser: RequestHandler = async (req, res, next) => {
+	try {
+		const authUser = await UserModel.findById(req.session.userId).exec();
+		res.status(200).json(authUser);
+	} catch (error) {
+		next(error);
+	}
+};
+
 interface LoginBody {
 	usernameOrEmail: string;
 	password: string;
