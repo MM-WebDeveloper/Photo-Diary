@@ -1,5 +1,6 @@
-import { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import * as ROUTES from '../constants/routes';
 import { UserContext } from '../context/UserContext';
 import * as AuthenticationApi from '../network/authentication.api';
 
@@ -11,6 +12,7 @@ const Login = () => {
 	const [error, setError] = useState('');
 	const userContext = useContext(UserContext);
 	const isInvalid = inputs.usernameOrEmail === '' || inputs.password === '';
+	const documentTitle = 'Login \u2022 Photo Diary';
 
 	const navigate = useNavigate();
 
@@ -20,13 +22,17 @@ const Login = () => {
 		try {
 			const loggedInUser = await AuthenticationApi.loginUser(inputs);
 			userContext.setUser(loggedInUser);
-			navigate('/dashboard');
+			navigate(ROUTES.DASHBOARD);
 		} catch (error) {
 			let message = 'Unknown Error';
 			if (error instanceof Error) message = error.message;
 			setError(message);
 		}
 	};
+
+	useEffect(() => {
+		document.title = documentTitle;
+	}, []);
 
 	return (
 		<>
@@ -57,6 +63,10 @@ const Login = () => {
 					Log In
 				</button>
 			</form>
+			<div>
+				<p style={{ display: 'inline' }}>Don't have an account?</p>
+				<Link to={ROUTES.REGISTER}>Register</Link>
+			</div>
 		</>
 	);
 };

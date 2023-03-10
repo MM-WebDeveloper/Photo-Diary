@@ -87,7 +87,7 @@ const Register = () => {
 			</form>
 			<div>
 				<p style={{ display: 'inline' }}>Already have an account?</p>
-				<Link to='/login'>Login</Link>
+				<Link to={ROUTES.LOGIN}>Login</Link>
 			</div>
 		</>
 	);
