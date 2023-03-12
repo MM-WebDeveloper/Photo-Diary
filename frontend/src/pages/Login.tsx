@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import * as ROUTES from '../constants/routes';
-import { UserContext } from '../context/UserContext';
 import * as AuthenticationApi from '../network/authentication.api';
 
 const Login = () => {
@@ -10,7 +9,6 @@ const Login = () => {
 		password: '',
 	});
 	const [error, setError] = useState('');
-	const userContext = useContext(UserContext);
 	const isInvalid = inputs.usernameOrEmail === '' || inputs.password === '';
 	const documentTitle = 'Login \u2022 Photo Diary';
 
@@ -20,8 +18,7 @@ const Login = () => {
 		e.preventDefault();
 
 		try {
-			const loggedInUser = await AuthenticationApi.loginUser(inputs);
-			userContext.setUser(loggedInUser);
+			await AuthenticationApi.loginUser(inputs);
 			navigate(ROUTES.DASHBOARD);
 		} catch (error) {
 			let message = 'Unknown Error';
