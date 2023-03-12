@@ -5,8 +5,8 @@ import bcrypt from 'bcrypt';
 
 export const AuthenticateUser: RequestHandler = async (req, res, next) => {
 	try {
-		const authUser = await UserModel.findById(req.session.userId).exec();
-		res.status(200).json(authUser);
+		const authUser = await UserModel.findById(req.session.userId);
+		res.status(200).send(authUser);
 	} catch (error) {
 		next(error);
 	}
@@ -45,17 +45,8 @@ export const Login: RequestHandler<
 		if (!pwdMatch) {
 			throw createHttpError(401, 'Invalid credentials');
 		}
-
-		const userOmittedPwd = {
-			username: user.username,
-			email: user.email,
-			fullName: user.fullName,
-			following: user.following,
-			follwers: user.followers,
-		};
-
 		req.session.userId = user._id;
-		res.json(userOmittedPwd);
+		res.status(200).send({ message: 'Login successful' });
 	} catch (error) {
 		next(error);
 	}
@@ -104,7 +95,7 @@ export const Register: RequestHandler<
 
 		req.session.userId = newUser._id;
 
-		res.status(201).json(newUser);
+		res.status(201).send({ message: 'Register successful' });
 	} catch (error) {
 		next(error);
 	}
